@@ -53,8 +53,6 @@ def clean_df(df, background_df=None):
 
     df['nomem_encr'] = nomem_encr
 
-    print(df.columns)
-
     return df
 
 

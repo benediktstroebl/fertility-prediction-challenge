@@ -7,6 +7,10 @@ but the resulting model model.joblib will be applied to the holdout data.
 It is important to document your training steps here, including seed, 
 number of folds, model, et cetera
 """
+import random
+import pandas as pd
+import joblib
+from sklearn.ensemble import RandomForestClassifier
 
 def train_save_model(cleaned_df, outcome_df):
     """
@@ -23,18 +27,23 @@ def train_save_model(cleaned_df, outcome_df):
     # Combine cleaned_df and outcome_df
     model_df = pd.merge(cleaned_df, outcome_df, on="nomem_encr")
 
+    print("model cols", model_df.columns)
+
     # Filter cases for whom the outcome is not available
     model_df = model_df[~model_df['new_child'].isna()]  
 
-    print("model cols", model_df.columns)
-    
     # Logistic regression model
-    model = RandomForest()
+    model = RandomForestClassifier(n_estimators=300, max_depth=None)
 
     # Fit the model
     model.fit(model_df[['cf20m029', 'cf19l128', 'cf20m128', 'cf19l130', 'ch20m219', 'cp20l051',
        'cv20l279', 'cr20m152', 'cw20m572', 'belbezig_2020', 'burgstat_2020',
        'partner_2020']], model_df['new_child'])
+    
+    # print model train score
+    print("Model train score: ", model.score(model_df[['cf20m029', 'cf19l128', 'cf20m128', 'cf19l130', 'ch20m219', 'cp20l051',
+         'cv20l279', 'cr20m152', 'cw20m572', 'belbezig_2020', 'burgstat_2020',
+         'partner_2020']], model_df['new_child']))
 
     # Save the model
     joblib.dump(model, "model.joblib")
