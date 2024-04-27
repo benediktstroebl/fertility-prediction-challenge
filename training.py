@@ -25,12 +25,16 @@ def train_save_model(cleaned_df, outcome_df):
 
     # Filter cases for whom the outcome is not available
     model_df = model_df[~model_df['new_child'].isna()]  
+
+    print("model cols", model_df.columns)
     
     # Logistic regression model
-    model = LogisticRegression()
+    model = RandomForest()
 
     # Fit the model
-    model.fit(model_df[['age']], model_df['new_child'])
+    model.fit(model_df[['cf20m029', 'cf19l128', 'cf20m128', 'cf19l130', 'ch20m219', 'cp20l051',
+       'cv20l279', 'cr20m152', 'cw20m572', 'belbezig_2020', 'burgstat_2020',
+       'partner_2020']], model_df['new_child'])
 
     # Save the model
     joblib.dump(model, "model.joblib")

@@ -18,6 +18,7 @@ run.py can be used to test your submission.
 # List your libraries and modules here. Don't forget to update environment.yml!
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
+from sklearn.impute import SimpleImputer
 import joblib
 
 
@@ -34,21 +35,25 @@ def clean_df(df, background_df=None):
     pd.DataFrame: The cleaned dataframe with only the necessary columns and processed variables.
     """
 
+    nomem_encr = df['nomem_encr'].copy()
     ## This script contains a bare minimum working example
-    # Create new variable with age
-    df["age"] = 2024 - df["birthyear_bg"]
+    # Select relevant features
+    df = df[['cf20m029', 'cf19l128', 'cf20m128', 'cf19l130', 'ch20m219', 'cp20l051',
+       'cv20l279', 'cr20m152', 'cw20m572', 'belbezig_2020', 'burgstat_2020',
+       'partner_2020']]
 
-    # Imputing missing values in age with the mean
-    df["age"] = df["age"].fillna(df["age"].mean())
+    # impute missing values with mean
+    imputer = SimpleImputer(strategy='mean')
+    df = imputer.fit_transform(df)
 
-    # Selecting variables for modelling
-    keepcols = [
-        "nomem_encr",  # ID variable required for predictions,
-        "age"          # newly created variable
-    ] 
+    # convert df back to pandas df with original feature names
+    df = pd.DataFrame(df, columns=['cf20m029', 'cf19l128', 'cf20m128', 'cf19l130', 'ch20m219', 'cp20l051',
+       'cv20l279', 'cr20m152', 'cw20m572', 'belbezig_2020', 'burgstat_2020',
+       'partner_2020'])
 
-    # Keeping data with variables selected
-    df = df[keepcols]
+    df['nomem_encr'] = nomem_encr
+
+    print(df.columns)
 
     return df
 
