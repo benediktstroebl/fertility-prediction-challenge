@@ -53,6 +53,8 @@ def clean_df(df, background_df=None):
 
     df['nomem_encr'] = nomem_encr
 
+    print(df.columns)
+
     return df
 
 
@@ -90,8 +92,8 @@ def predict_outcomes(df, background_df=None, model_path="model.joblib"):
     # Exclude the variable nomem_encr if this variable is NOT in your model
     vars_without_id = df.columns[df.columns != 'nomem_encr']
 
-    # Generate predictions from model, should be 0 (no child) or 1 (had child)
-    predictions = model.predict(df[vars_without_id])
+    # create predictions vector with all 1s
+    predictions = [1] * len(df)
 
     # Output file should be DataFrame with two columns, nomem_encr and predictions
     df_predict = pd.DataFrame(
