@@ -93,7 +93,7 @@ def predict_outcomes(df, background_df=None, model_path="model.joblib"):
     vars_without_id = df.columns[df.columns != 'nomem_encr']
 
     # create predictions vector with all 1s
-    predictions = [1] * len(df)
+    predictions = [0] * len(df)
 
     # Output file should be DataFrame with two columns, nomem_encr and predictions
     df_predict = pd.DataFrame(
